@@ -1,0 +1,8 @@
+//
+// Prefix header for all source files of the 'LudumDare31' target in the 'LudumDare31' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+	#import <UIKit/UIKit.h>
+#endif
