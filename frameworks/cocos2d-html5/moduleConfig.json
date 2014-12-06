@@ -361,6 +361,9 @@
             "extensions/cocostudio/reader/timeline/Timeline.js",
             "extensions/cocostudio/reader/timeline/CSLoader.js"
         ],
+        "scale9sprite" : [
+            "extensions/gui/control-extension/CCScale9Sprite.js"
+        ],
         "gui" : [
             "core", "clipping-nodes", "render-texture", "actions", "progress-timer",
 
