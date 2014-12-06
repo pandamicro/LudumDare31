@@ -11,7 +11,7 @@ EnemyLayer = cc.Layer.extend({
             x, y;
         this.addChild(enemy);
         enemy.x = enemy.width/2 + Math.round(Math.random() * this.width - enemy.width);
-        enemy.y = enemy.height/2 + Math.round(Math.random() * this.height);
+        enemy.y = enemy.height/2 + Math.round(Math.random() * this.height - enemy.height);
         enemy.goAfter();
     },
     

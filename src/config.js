@@ -36,11 +36,22 @@ var CFG = {
         tex: res.hero_png,
         texRect: cc.rect(0, 0, 150, 100),
         scale: 0.7,
-        speed: 5
+        speed: 5,
+        hp: 100
     },
     
     Enemy: {
-        chaseSpeed: 3,
-        runSpeed: 3
-    }
+        chaseSpeed: 1.5,
+        restSpeed: 0.5,
+        runSpeed: 2,
+        warnDis: 300,
+        damage: 10,
+    },
+    
+    itemInterval: 600,
+    itemDuration: 5,
+}
+
+function easyRandom(seed, range) {
+    return Math.round(seed + Math.random() * range - range/2);
 }

@@ -6,29 +6,60 @@ var Enemy = cc.Sprite.extend({
     dirInDegree: 0,
     direction: 0,
     speed: CFG.Enemy.chaseSpeed,
+    _currVec: cc.p(),
+    _count: 0,
+    damage: CFG.Enemy.damage,
     
     ctor: function(spriteFrame, target) {
         this._super(spriteFrame);
         this.target = target;
+        this.speed += Math.random() * 1 - 0.5;
     },
     
     update: function(dt) {
         var x = this.x, 
             y = this.y;
         
-        this.goAfter();
-        x += Math.cos(this.direction);
-        y += Math.sin(this.direction);
-        if (x < CFG.groundW && x > 0) {
+        if (this._count >= 15) {
+            this.strategy();
+            this._count = 0;
+        }
+        this._count ++;
+        
+        x += this.speed * Math.cos(this.direction);
+        y += this.speed * Math.sin(this.direction);
+        if (x < CFG.width && x > -1) {
             this.x = x;
         }
-        if (y < CFG.groundH && y > 0) {
+        if (y < CFG.height && y > -1) {
             this.y = y;
         }
     },
     
+    strategy: function() {
+        var distance = 0, tarPos = this.target.getPosition(), x, y, warnDis = CFG.Enemy.warnDis;
+        
+        x = this._currVec.x = tarPos.x - (this._position.x + this.parent._position.x);
+        y = this._currVec.y = tarPos.y - (this._position.y + this.parent._position.y);
+        distance = Math.round(Math.sqrt(x * x + y * y));
+        
+        if (distance < this.width/2) {
+            this.target.hurt(this.damage);
+        }
+        
+        if (this.target.hasWeapon && distance < warnDis)
+            this.runAway();
+        else if (distance < warnDis)
+            this.goAfter();
+        else {
+            this.direction = Math.random() * Math.PI * 2;
+            this.dirInDegree = 180 * this.direction / Math.PI;
+            //this.speed = CFG.Enemy.restSpeed;
+        }
+    },
+    
     goAfter: function() {
-        this.direction = cc.pToAngle(cc.pSub(this.target.getPosition(), cc.pAdd(this._position, this.parent._position)));
+        this.direction = cc.pToAngle(this._currVec);
         this.direction < 0 && (this.direction += Math.PI * 2);
         this.dirInDegree = 180 * this.direction / Math.PI;
         this.chaseAnime && this.runAction(this.chaseAnime);

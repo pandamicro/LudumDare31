@@ -3,24 +3,27 @@ var GameScene = cc.Scene.extend({
     _downRoom: null,
     _hero: null,
     _enemyLayer: null,
+    //_magicBalls: null,
     _uiLayer: null,
+    
+    _breaking: false,
     
     ctor: function() {
         this._super();
-        
-        this._room = new RoomLayer();
-        this.addChild(this._room, 1);
         
         this._hero = new Hero();
         this.addChild(this._hero, 3);
         this._hero.x = cc.winSize.width/2;
         this._hero.y = cc.winSize.height/2;
         
+        this._room = new RoomLayer(this._hero);
+        this.addChild(this._room, 1);
+        
         this._enemyLayer = new EnemyLayer(this._hero);
-        this._enemyLayer.x = CFG.marginX;
-        this._enemyLayer.y = CFG.marginY;
-        this._enemyLayer.width = CFG.groundW;
-        this._enemyLayer.height = CFG.groundH;
+        //this._enemyLayer.x = CFG.marginX;
+        //this._enemyLayer.y = CFG.marginY;
+        this._enemyLayer.width = CFG.width;
+        this._enemyLayer.height = CFG.height;
         this.addChild(this._enemyLayer, 4);
         for (var i = 0; i < 10; i++)
              this._enemyLayer.addEnemy(Enemy);
@@ -36,13 +39,18 @@ var GameScene = cc.Scene.extend({
     },
     
     update: function(dt) {
-        this._hero.update(dt);
-        this._enemyLayer.update(dt);
+        if (!this._breaking) {
+            this._hero.update(dt);
+            this._enemyLayer.update(dt);
+            this._room.update(dt);
+        }
     },
     
     breakDown: function() {
+        this._breaking = true;
+        
         this._downRoom && this._downRoom.removeFromParent(true);
-        this._downRoom = new RoomLayer();
+        this._downRoom = new RoomLayer(this._hero);
         this._downRoom.scaleX = CFG.inScaleX;
         this._downRoom.scaleY = CFG.inScaleY;
         this.addChild(this._downRoom, 0);
@@ -61,7 +69,7 @@ var GameScene = cc.Scene.extend({
     
     preScale: function() {
         // Clean up the room
-        this._room._tiledLayer.removeFromParent(true);
+        this._room.cleanUp();
         this._downRoom.runAction(cc.scaleTo(1, 1));
     },
     
@@ -71,5 +79,6 @@ var GameScene = cc.Scene.extend({
         this._room.zIndex = 1;
         this._downRoom = temp;
         this._downRoom.zIndex = 2;
+        this._breaking = false;
     }
 });

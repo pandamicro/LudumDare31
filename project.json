@@ -20,6 +20,8 @@
         "src/RoomLayer.js",
         "src/Enemies.js",
         "src/EnemyLayer.js",
+        "src/Items.js",
+        "src/ItemLayer.js",
         "src/GameScene.js"
     ]
 }
