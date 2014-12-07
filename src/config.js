@@ -46,6 +46,7 @@ var CFG = {
         runSpeed: 2,
         warnDis: 300,
         damage: 10,
+        courageTime: 7
     },
     
     itemInterval: 600,

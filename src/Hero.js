@@ -22,6 +22,8 @@ var Hero = cc.Sprite.extend({
     w: 0,
     h: 0,
     
+    item: null,
+    
     ctor: function() {
         var c, r, 
             names = ["downAnime", "leftAnime", "rightAnime", "upAnime"], 
@@ -96,17 +98,27 @@ var Hero = cc.Sprite.extend({
         }
     },
     
+    hasWeapon: function() {
+        return this.item && this.item.isWeapon ? true : false;
+    },
+    
     shoot: function() {
+        if (this.item) {
+            cc.log("Shoot");
+            this.item.fire();
+            this.item.release();
+            this.item = null;
+        }
     },
     
     hurt: function(damage) {
         if (this.unhurtable) return;
         
-        this.hp -= damage;
-        cc.log("HP: " + this.hp);
-        if (this.hp < 0) {
+        if (this.hp <= 0) {
         }
         else {
+            this.hp -= damage;
+            cc.log("HP: " + this.hp);
             this.unhurtable = true;
             this.scheduleOnce(this.turnNormal, 1);
         }
@@ -118,6 +130,8 @@ var Hero = cc.Sprite.extend({
     
     getItem: function(item) {
         item.removeFromParent(true);
+        item.retain();
+        this.item = item;
     },
     
     update: function() {

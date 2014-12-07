@@ -9,6 +9,9 @@ var Enemy = cc.Sprite.extend({
     _currVec: cc.p(),
     _count: 0,
     damage: CFG.Enemy.damage,
+    chasing: false,
+    ranning: false,
+    couraged: false,
     
     ctor: function(spriteFrame, target) {
         this._super(spriteFrame);
@@ -47,7 +50,7 @@ var Enemy = cc.Sprite.extend({
             this.target.hurt(this.damage);
         }
         
-        if (this.target.hasWeapon && distance < warnDis)
+        if (!this.couraged && this.target.hasWeapon() && distance < warnDis)
             this.runAway();
         else if (distance < warnDis)
             this.goAfter();
@@ -62,17 +65,32 @@ var Enemy = cc.Sprite.extend({
         this.direction = cc.pToAngle(this._currVec);
         this.direction < 0 && (this.direction += Math.PI * 2);
         this.dirInDegree = 180 * this.direction / Math.PI;
-        this.chaseAnime && this.runAction(this.chaseAnime);
+        if (!this.chasing) {
+            this.chasing = true;
+            this.ranning = false;
+            this.stopAllActions();
+            this.chaseAnime && this.runAction(this.chaseAnime);
+        }
     },
     
     runAway: function() {
-        this.dirInDegree = (this.dirInDegree + 30 + Math.round(Math.random() * 300)) % 360;
-        this.direction = Math.PI * 2 * this.dirInDegree / 360;
-        this.runAnime && this.runAction(this.runAnime);
-        this.runAction(cc.sequence(
-            cc.delayTime(5),
-            cc.callFunc(this.goAfter, this)
-        ));
+        this.direction = cc.pToAngle(cc.p(-this._currVec.x, -this._currVec.y));
+        this.direction < 0 && (this.direction += Math.PI * 2);
+        this.dirInDegree = 180 * this.direction / Math.PI;
+        //this.dirInDegree = (this.dirInDegree + 30 + Math.round(Math.random() * 300)) % 360;
+        //this.direction = Math.PI * 2 * this.dirInDegree / 360;
+        if (!this.ranning) {
+            this.chasing = false;
+            this.ranning = true;
+            this.stopAllActions();
+            this.runAnime && this.runAction(this.runAnime);
+            this.scheduleOnce(this.getCouraged, CFG.Enemy.courageTime + Math.floor(Math.random() * CFG.Enemy.courageTime));
+        }
+    },
+    
+    getCouraged: function () {
+        this.couraged = true;
+        cc.log("Couraged");
     },
     
     hurt: function() {

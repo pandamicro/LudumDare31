@@ -38,7 +38,6 @@ var HeroKeyboardManager = cc.EventListener.create({
         }
         else if (keyCode == 32) {
             hero.shoot();
-            cc.log("shoot");
         }
     },
     onKeyReleased : function (keyCode, event) {
