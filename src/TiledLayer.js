@@ -1,8 +1,8 @@
 var Tile = cc.Sprite.extend({
     ctor: function(tex, texRect, width, height) {
         this._super(tex, texRect);
-        this.scaleX = width / tex.width;
-        this.scaleY = height / tex.height;
+        this.scaleX = width / texRect.width;
+        this.scaleY = height / texRect.height;
     }
 });
 
@@ -12,7 +12,8 @@ var TiledLayer = cc.Layer.extend({
     _tw : 0,
     _th : 0,
     _batchNode: null,
-    _tex : null,
+    _frame : null,
+    _breakAnime : null,
     
     ctor: function(width, height, col, row) {
         var r, c, tile, tex, rect, tw, th, anchor = cc.p(0, 0);
@@ -23,8 +24,9 @@ var TiledLayer = cc.Layer.extend({
         tw = this._tw = Math.floor(width / this._col);
         th = this._th = Math.floor(height / this._row);
         
-        tex = this._tex = cc.textureCache.addImage(res.tile_png);
-        rect = cc.rect(0, 0, 70, 70);
+        this._frame = cc.spriteFrameCache.getSpriteFrame("tile1.png");
+        tex = this._frame.getTexture();
+        rect = this._frame.getRect();
         this._batchNode = new cc.SpriteBatchNode(tex, row * col);
         for (r = 0; r < row; ++r) {
             for (c = 0; c < col; ++c) {

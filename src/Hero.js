@@ -33,51 +33,40 @@ var Hero = cc.Sprite.extend({
     ctor: function() {
         var c, r, 
             names = ["downAnime", "leftAnime", "rightAnime", "upAnime"], 
-            name, frame, frames, 
-            animation,
-            tex = CFG.Hero.tex, 
-            x, y, 
-            w = CFG.Hero.texRect.width,
-            h = CFG.Hero.texRect.height,
-            rect = cc.rect(0, 0, w, h);
+            name, frame, frames, frameName, 
+            animation, 
+            x, y;
         
-        this._super(tex, CFG.Hero.texRect);
+        this._super("#hero1.png");
         
+        frameName = "hero";
         for (r = 0; r < 4; ++r) {
             name = names[r];
             frames = [];
             for (c = 1; c < 3; ++c) {
-                rect.x = c * w;
-                rect.y = r * h;
-                frame = new cc.SpriteFrame(tex, rect);
-                
+                frame = cc.spriteFrameCache.getSpriteFrame(frameName + (r*3+c+1) + ".png");
                 frames.push(frame);
             }
             animation = new cc.Animation(frames, 0.2);
             this[name] = cc.animate(animation).repeatForever();
         }
         
-        rect.x = 0;
-        rect.y = 0;
-        this.standDown = new cc.SpriteFrame(tex, rect);
-        rect.y += h;
-        this.standLeft = new cc.SpriteFrame(tex, rect);
-        rect.y += h;
-        this.standRight = new cc.SpriteFrame(tex, rect);
-        rect.y += h;
-        this.standUp = new cc.SpriteFrame(tex, rect);
-        rect.y += h;
-        this.preFallFr = new cc.SpriteFrame(tex, rect);
-        rect.x += w;
-        this.fallingFr = new cc.SpriteFrame(tex, rect);
-        rect.x += w;
-        this.landedFr = new cc.SpriteFrame(tex, rect);
+        this.standDown = cc.spriteFrameCache.getSpriteFrame("hero1.png");
+        this.standLeft = cc.spriteFrameCache.getSpriteFrame("hero4.png");
+        this.standRight = cc.spriteFrameCache.getSpriteFrame("hero7.png");
+        this.standUp = cc.spriteFrameCache.getSpriteFrame("hero10.png");
+        this.preFallFr = cc.spriteFrameCache.getSpriteFrame("hero13.png");
+        this.fallingFr = cc.spriteFrameCache.getSpriteFrame("hero14.png");
+        this.landedFr = cc.spriteFrameCache.getSpriteFrame("hero15.png");
+        //this.dieFr = cc.spriteFrameCache.getSpriteFrame("hero16.png");
+        //this.fallingFr = cc.spriteFrameCache.getSpriteFrame("hero17.png");
+        //this.landedFr = cc.spriteFrameCache.getSpriteFrame("hero18.png");
         
         this.stand();
         this.collisionObjs = [];
         this.scale = CFG.Hero.scale;
         this.w = this.width * CFG.Hero.scale * 0.5;
-        this.h = this.height * CFG.Hero.scale;
+        this.h = this.height * CFG.Hero.scale * 0.8;
     },
     
     onEnter: function() {

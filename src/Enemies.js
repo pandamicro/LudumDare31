@@ -21,9 +21,9 @@ var Enemy = cc.Sprite.extend({
     
     ctor: function(target) {
         var tex = CFG.Enemy.tex;
-        this.chaseFr = new cc.SpriteFrame(tex, CFG.Enemy.chaseRect);
-        this.runFr = new cc.SpriteFrame(tex, CFG.Enemy.runRect);
-        this.restFr = new cc.SpriteFrame(tex, CFG.Enemy.restRect);
+        this.chaseFr = cc.spriteFrameCache.getSpriteFrame(CFG.Enemy.chaseFr);
+        this.runFr = cc.spriteFrameCache.getSpriteFrame(CFG.Enemy.runFr);
+        this.restFr = cc.spriteFrameCache.getSpriteFrame(CFG.Enemy.restFr);
         
         this._super(this.restFr);
         this.target = target;

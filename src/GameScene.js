@@ -113,6 +113,11 @@ var Levels = [
                 tex : "#armor_block.png",
                 type : ContraArmor,
                 pos : [200, 400]
+            },
+            {
+                tex : "#princess.png",
+                type : Crystal,
+                pos : [850, 400]
             }
         ]
     }

@@ -28,29 +28,26 @@ var CFG = {
     
     Wall: {
         tex: res.wall_png,
-        rect: cc.rect(0, 0, 598, 395),
-        capInset: cc.rect(0, 0, 598, 395),
+        rect: cc.rect(0, 0, 598, 396),
+        capInset: cc.rect(0, 0, 598, 396),
     },
     
     Hero: {
-        tex: res.hero_png,
-        texRect: cc.rect(0, 0, 150, 100),
         scale: 0.7,
         speed: 5,
         hp: 100
     },
     
     Enemy: {
-        tex: res.enemy_png,
         chaseSpeed: 1.5,
         restSpeed: 0.5,
         runSpeed: 2,
         warnDis: 300,
         damage: 10,
         courageTime: 7,
-        chaseRect: cc.rect(200, 0, 100, 120),
-        runRect: cc.rect(100, 0, 100, 120),
-        restRect: cc.rect(0, 0, 100, 120)
+        chaseFr: "fantome_chase.png",
+        runFr: "fantome_run.png",
+        restFr: "fantome_rest.png"
     },
     
     itemInterval: 350,

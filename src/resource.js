@@ -1,8 +1,8 @@
 var res = {
-    tile_png : "res/tile.png",
+    //tile_png : "res/tile.png",
     wall_png : "res/wall.png",
-    hero_png : "res/hero.png",
-    enemy_png : "res/fantome.png",
+    //hero_png : "res/hero.png",
+    //enemy_png : "res/fantome.png",
     items_plist : "res/items.plist",
     items_png : "res/items.png"
 };
