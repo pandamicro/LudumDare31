@@ -2,7 +2,7 @@ var res = {
     tile_png : "res/tile.png",
     wall_png : "res/wall.png",
     hero_png : "res/hero.png",
-    enemy_png : "res/CloseNormal.png",
+    enemy_png : "res/fantome.png",
     item_png : "res/CloseSelected.png"
 };
 

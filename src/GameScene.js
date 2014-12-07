@@ -61,16 +61,19 @@ var GameScene = cc.Scene.extend({
             cc.sequence(
                 cc.delayTime(CFG.tileBreakTime),
                 cc.callFunc(this.preScale, this),
-                cc.scaleTo(1, 1.3, 2),
+                cc.scaleTo(1, CFG.outScaleX, CFG.outScaleY),
                 cc.callFunc(this.transitionDone, this)
             )
         );
+        
+        this._hero.fall();
     },
     
     preScale: function() {
         // Clean up the room
         this._room.cleanUp();
         this._downRoom.runAction(cc.scaleTo(1, 1));
+        this._hero.falling();
     },
     
     transitionDone: function() {
@@ -79,6 +82,9 @@ var GameScene = cc.Scene.extend({
         this._room.zIndex = 1;
         this._downRoom = temp;
         this._downRoom.zIndex = 2;
+        
+        this._hero.landed();
+        
         this._breaking = false;
     }
 });

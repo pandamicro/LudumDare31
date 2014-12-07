@@ -3,16 +3,21 @@ var Hero = cc.Sprite.extend({
     downAnime: null,
     leftAnime: null,
     rightAnime: null,
+    fallAnime: null,
     standUp: null,
     standDown: null,
     standLeft: null,
     standRight: null,
+    preFallFr: null,
+    fallingFr: null,
+    landedFr: null,
     collisionObjs: null,
     
     speed: CFG.Hero.speed,
     hp: CFG.Hero.hp,
     
     unhurtable: false,
+    isFalling: false,
     
     goLeft: false,
     goRight: false,
@@ -60,6 +65,12 @@ var Hero = cc.Sprite.extend({
         this.standRight = new cc.SpriteFrame(tex, rect);
         rect.y += h;
         this.standUp = new cc.SpriteFrame(tex, rect);
+        rect.y += h;
+        this.preFallFr = new cc.SpriteFrame(tex, rect);
+        rect.x += w;
+        this.fallingFr = new cc.SpriteFrame(tex, rect);
+        rect.x += w;
+        this.landedFr = new cc.SpriteFrame(tex, rect);
         
         this.stand();
         this.collisionObjs = [];
@@ -96,6 +107,36 @@ var Hero = cc.Sprite.extend({
             this.goRight = false;
             this.setSpriteFrame(this.standRight);
         }
+        else 
+            this.setSpriteFrame(this.standDown);
+    },
+    
+    fall: function() {
+        this.isFalling = true;
+        this.stopAllActions();
+        this.setSpriteFrame(this.preFallFr);
+    },
+    
+    falling: function() {
+        this.isFalling = true;
+        this.stopAllActions();
+        this.setSpriteFrame(this.fallingFr);
+    },
+    
+    landed: function() {
+        this.isFalling = true;
+        this.stopAllActions();
+        this.setSpriteFrame(this.landedFr);
+        this.scheduleOnce(this.fallOver, 1);
+    },
+    
+    fallOver: function() {
+        this.isFalling = false;
+        this.goUp = false;
+        this.goDown = true;
+        this.goLeft = false;
+        this.goRight = false;
+        this.stand();
     },
     
     hasWeapon: function() {
@@ -171,3 +212,5 @@ _p.downAnime;
 _p.leftAnime;
 /** @expose */
 _p.rightAnime;
+/** @expose */
+_p.fallAnime;

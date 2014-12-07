@@ -3,6 +3,9 @@ var Enemy = cc.Sprite.extend({
     dieAnime: null,
     runAnime: null,
     chaseAnime: null,
+    chaseFr: null,
+    runFr: null,
+    restFr: null,
     dirInDegree: 0,
     direction: 0,
     speed: CFG.Enemy.chaseSpeed,
@@ -12,9 +15,15 @@ var Enemy = cc.Sprite.extend({
     chasing: false,
     ranning: false,
     couraged: false,
+    courageScheduled: false,
     
-    ctor: function(spriteFrame, target) {
-        this._super(spriteFrame);
+    ctor: function(target) {
+        var tex = CFG.Enemy.tex;
+        this.chaseFr = new cc.SpriteFrame(tex, CFG.Enemy.chaseRect);
+        this.runFr = new cc.SpriteFrame(tex, CFG.Enemy.runRect);
+        this.restFr = new cc.SpriteFrame(tex, CFG.Enemy.restRect);
+        
+        this._super(this.restFr);
         this.target = target;
         this.speed += Math.random() * 1 - 0.5;
     },
@@ -58,6 +67,11 @@ var Enemy = cc.Sprite.extend({
             this.direction = Math.random() * Math.PI * 2;
             this.dirInDegree = 180 * this.direction / Math.PI;
             //this.speed = CFG.Enemy.restSpeed;
+            if (this.chasing || this.ranning) {
+                this.chasing = false;
+                this.ranning = false;
+                this.setSpriteFrame(this.restFr);
+            }
         }
     },
     
@@ -69,6 +83,7 @@ var Enemy = cc.Sprite.extend({
             this.chasing = true;
             this.ranning = false;
             this.stopAllActions();
+            this.setSpriteFrame(this.chaseFr);
             this.chaseAnime && this.runAction(this.chaseAnime);
         }
     },
@@ -83,8 +98,12 @@ var Enemy = cc.Sprite.extend({
             this.chasing = false;
             this.ranning = true;
             this.stopAllActions();
+            this.setSpriteFrame(this.runFr);
             this.runAnime && this.runAction(this.runAnime);
-            this.scheduleOnce(this.getCouraged, CFG.Enemy.courageTime + Math.floor(Math.random() * CFG.Enemy.courageTime));
+            if (!this.courageScheduled) {
+                this.scheduleOnce(this.getCouraged, CFG.Enemy.courageTime + Math.floor(Math.random() * CFG.Enemy.courageTime));
+                this.courageScheduled = true;
+            }
         }
     },
     

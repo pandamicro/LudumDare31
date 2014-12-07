@@ -7,7 +7,7 @@ EnemyLayer = cc.Layer.extend({
     },
     
     addEnemy: function(type) {
-        var enemy = new type(new cc.SpriteFrame(res.enemy_png, cc.rect(0, 0, 40, 40)), this.target), 
+        var enemy = new type(this.target), 
             x, y;
         this.addChild(enemy);
         enemy.x = enemy.width/2 + Math.round(Math.random() * this.width - enemy.width);
