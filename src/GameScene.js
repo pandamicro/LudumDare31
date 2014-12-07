@@ -26,6 +26,31 @@ var Levels = [
                 tex : "#magic_wall.png",
                 type : MagicWall,
                 pos : [200, 450]
+            },
+            {
+                tex : "#sand_wall.png",
+                type : Block,
+                pos : [354, 450]
+            },
+            {
+                tex : "#sand_wall.png",
+                type : Block,
+                pos : [431, 450]
+            },
+            {
+                tex : "#sand_wall.png",
+                type : Block,
+                pos : [508, 450]
+            },
+            {
+                tex : "#static_wall.png",
+                type : Block,
+                pos : [585, 450]
+            },
+            {
+                tex : "#sand_wall.png",
+                type : Block,
+                pos : [662, 450]
             }
         ]
     },
@@ -79,7 +104,7 @@ var Levels = [
     {
         itemTypes: [MasterBlade, Flower, Timer],
         itemProbs: [0.3, 0.8, 1],
-        enemyCount: 1,
+        enemyCount: 7,
         objs: [
             {
                 tex : "#static_wall.png",
@@ -102,7 +127,7 @@ var Levels = [
     {
         itemTypes: [Armor, Shell, Timer],
         itemProbs: [0.7, 0.8, 0.9],
-        enemyCount: 6,
+        enemyCount: 9,
         objs: [
             {
                 tex : "#contra_wall.png",
