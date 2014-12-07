@@ -4,6 +4,7 @@ var Hero = cc.Sprite.extend({
     leftAnime: null,
     rightAnime: null,
     fallAnime: null,
+    dieAnime: null,
     standUp: null,
     standDown: null,
     standLeft: null,
@@ -58,9 +59,13 @@ var Hero = cc.Sprite.extend({
         this.preFallFr = cc.spriteFrameCache.getSpriteFrame("hero13.png");
         this.fallingFr = cc.spriteFrameCache.getSpriteFrame("hero14.png");
         this.landedFr = cc.spriteFrameCache.getSpriteFrame("hero15.png");
-        //this.dieFr = cc.spriteFrameCache.getSpriteFrame("hero16.png");
-        //this.fallingFr = cc.spriteFrameCache.getSpriteFrame("hero17.png");
-        //this.landedFr = cc.spriteFrameCache.getSpriteFrame("hero18.png");
+        
+        frames = [];
+        frames.push(cc.spriteFrameCache.getSpriteFrame("hero16.png"));
+        frames.push(cc.spriteFrameCache.getSpriteFrame("hero17.png"));
+        frames.push(cc.spriteFrameCache.getSpriteFrame("hero18.png"));
+        animation = new cc.Animation(frames, 0.2);
+        this.dieAnime = cc.animate(animation).repeatForever();
         
         this.stand();
         this.collisionObjs = [];
@@ -132,7 +137,7 @@ var Hero = cc.Sprite.extend({
     },
     
     shoot: function() {
-        if (this.item) {
+        if (!this.dead && this.item) {
             var speedX = this.faceRight ? 1 : (this.faceLeft ? -1 : 0), 
                 speedY = this.faceUp ? 1 : (this.faceDown ? -1 : 0);
             cc.log("Shoot");
@@ -142,10 +147,19 @@ var Hero = cc.Sprite.extend({
         }
     },
     
+    die: function() {
+        if (!this.dead) {
+            this.dead = true;
+            this.stopAllActions();
+            this.runAction(this.dieAnime);
+        }
+    },
+    
     hurt: function(damage) {
-        if (this.unhurtable) return;
+        if (this.unhurtable || this.dead) return;
         
         if (this.hp <= 0) {
+            this.die();
         }
         else {
             this.hp -= damage;
@@ -171,6 +185,8 @@ var Hero = cc.Sprite.extend({
     },
     
     update: function() {
+        if(this.dead) return;
+        
         var x = this.x, y = this.y, i, l, obj, r1, r2;
         if (this.walking) {
             if (this.faceRight && x <= CFG.rightBorder) {

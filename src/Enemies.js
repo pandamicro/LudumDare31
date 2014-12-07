@@ -72,9 +72,9 @@ var Enemy = cc.Sprite.extend({
             this.target.hurt(this.damage);
         }
         
-        if (!this.couraged && this.target.hasWeapon() && distance < warnDis)
+        if (!this.target.dead && !this.couraged && this.target.hasWeapon() && distance < warnDis)
             this.runAway();
-        else if (distance < warnDis)
+        else if (!this.target.dead && distance < warnDis)
             this.goAfter();
         else {
             this.direction = Math.random() * Math.PI * 2;

@@ -3,7 +3,7 @@ var HeroKeyboardManager = cc.EventListener.create({
 
     onKeyPressed : function (keyCode, event) {
         var hero = event.getCurrentTarget();
-        if (hero.isFalling) return;
+        if (hero.isFalling || hero.dead) return;
 
         if (keyCode == 39 && (!hero.walking || !hero.faceRight)) {
             hero.faceUp = false;
@@ -47,7 +47,7 @@ var HeroKeyboardManager = cc.EventListener.create({
     },
     onKeyReleased : function (keyCode, event) {
         var hero = event.getCurrentTarget();
-        if (hero.isFalling) return;
+        if (hero.isFalling || hero.dead) return;
 
         if (hero.faceRight && keyCode == 39) {
             hero.stand();

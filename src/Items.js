@@ -62,7 +62,7 @@ var Item = cc.Sprite.extend({
         var frame = new cc.Sprite(tex);
         frame.x = this.width/2;
         frame.y = this.height/2;
-        this.addChild(frame, 0, CFG.frameTag);
+        this.addChild(frame, -1, CFG.frameTag);
     },
     
     fire: function() {}

@@ -16,7 +16,7 @@ var TiledLayer = cc.Layer.extend({
     _breakAnime : null,
     
     ctor: function(width, height, col, row) {
-        var r, c, tile, tex, rect, tw, th, anchor = cc.p(0, 0);
+        var r, c, tile, tex, rect, tw, th, anchor = cc.p(0, 0), frames;
         
         this._super();
         this._row = row;
@@ -38,6 +38,12 @@ var TiledLayer = cc.Layer.extend({
         }
         
         this.addChild(this._batchNode);
+        
+        frames = [];
+        for (r = 1; r < 6; r++) {
+            frames.push(cc.spriteFrameCache.getSpriteFrame("tile"+r+".png"));
+        }
+        this._breakAnime = new cc.Animation(frames, 0.1);
     },
     
     breakDown: function() {
@@ -45,7 +51,7 @@ var TiledLayer = cc.Layer.extend({
         
         for (i = 0, l = tiles.length; i < l; ++i) {
             tile = tiles[i];
-            tile.runAction(cc.scaleTo(CFG.tileBreakTime, 0));
+            tile.runAction(cc.animate(this._breakAnime));
         }
     }
 });

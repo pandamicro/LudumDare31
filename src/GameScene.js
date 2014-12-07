@@ -161,7 +161,7 @@ var GameScene = cc.Scene.extend({
         //this._enemyLayer.y = CFG.marginY;
         this._enemyLayer.width = CFG.width;
         this._enemyLayer.height = CFG.height;
-        this.addChild(this._enemyLayer, 4);
+        this.addChild(this._enemyLayer, 10);
         this.addEnemies(this.enemyCount);
         
         this.initObjs();
