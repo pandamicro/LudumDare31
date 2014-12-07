@@ -22,6 +22,7 @@
         "src/EnemyLayer.js",
         "src/Items.js",
         "src/ItemLayer.js",
+        "src/UILayer.js",
         "src/GameScene.js"
     ]
 }

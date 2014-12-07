@@ -7,7 +7,30 @@ var Levels = [
             {
                 tex : "#crystal.png",
                 type : Crystal,
-                pos : [700, 450]
+                pos : [650, 450]
+            }
+        ]
+    },
+    // Contra
+    {
+        itemTypes: [Armor, Shell, Timer],
+        itemProbs: [0.7, 0.8, 0.9],
+        enemyCount: 6,
+        objs: [
+            {
+                tex : "#contra_wall.png",
+                type : ContraWall,
+                pos : [900, 400]
+            },
+            {
+                tex : "#armor_block.png",
+                type : ContraArmorBase,
+                pos : [200, 400]
+            },
+            {
+                tex : CFG.winType ? "#princess.png" : "#mashroom2.png",
+                type : Block,
+                pos : [850, 400]
             }
         ]
     },
@@ -38,7 +61,7 @@ var Levels = [
             {
                 tex : "#home.png",
                 type : TankHome,
-                pos : [130, 50]
+                pos : [130, 100]
             },
             {
                 tex : "#home.png",
@@ -50,8 +73,8 @@ var Levels = [
     // Pacman
     {
         itemTypes: [Pacman, Shell, Timer, Bean],
-        itemProbs: [0.65, 0.75, 0.82, 1],
-        enemyCount: 5,
+        itemProbs: [0.45, 0.55, 0.62, 1],
+        enemyCount: 6,
         objs: [
             {
                 tex : "#pac_enemy.png",
@@ -77,9 +100,9 @@ var Levels = [
     },
     // Zelda
     {
-        itemTypes: [MasterBlade, Shell, Timer],
-        itemProbs: [0.7, 0.8, 0.9],
-        enemyCount: 5,
+        itemTypes: [MasterBlade, Flower, Timer],
+        itemProbs: [0.3, 0.8, 1],
+        enemyCount: 1,
         objs: [
             {
                 tex : "#static_wall.png",
@@ -89,35 +112,12 @@ var Levels = [
             {
                 tex : "#static_wall.png",
                 type : HeartBase,
-                pos : [450, 550]
+                pos : [600, 550]
             },
             {
                 tex : "#static_wall.png",
                 type : HeartBase,
-                pos : [220, 320]
-            }
-        ]
-    },
-    // Contra
-    {
-        itemTypes: [Armor, Shell, Timer],
-        itemProbs: [0.7, 0.8, 0.9],
-        enemyCount: 5,
-        objs: [
-            {
-                tex : "#contra_wall.png",
-                type : ContraWall,
-                pos : [900, 400]
-            },
-            {
-                tex : "#armor_block.png",
-                type : ContraArmor,
-                pos : [200, 400]
-            },
-            {
-                tex : "#princess.png",
-                type : Crystal,
-                pos : [850, 400]
+                pos : [980, 320]
             }
         ]
     }
@@ -147,14 +147,14 @@ var GameScene = cc.Scene.extend({
         cc.spriteFrameCache.addSpriteFrames(res.items_plist, res.items_png);
         
         this._hero = new Hero();
-        this.addChild(this._hero, 3);
+        this.addChild(this._hero, CFG.heroZ);
         this._hero.x = cc.winSize.width/2;
         this._hero.y = cc.winSize.height/2;
         
         this.levelUp();
         
         this._room = new RoomLayer(this._hero, this.itemTypes, this.itemProbs);
-        this.addChild(this._room, 1);
+        this.addChild(this._room, CFG.roomZ);
         
         this._enemyLayer = new EnemyLayer(this._hero);
         //this._enemyLayer.x = CFG.marginX;
@@ -164,6 +164,10 @@ var GameScene = cc.Scene.extend({
         this.addChild(this._enemyLayer, 10);
         this.addEnemies(this.enemyCount);
         
+        this._uiLayer = new UILayer();
+        this.addChild(this._uiLayer, 20);
+
+        
         this.initObjs();
         
         this.scheduleUpdate();
@@ -171,7 +175,7 @@ var GameScene = cc.Scene.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ALL_AT_ONCE,
             onTouchesEnded: function(touches, event) {
-                event.getCurrentTarget().breakDown();
+//                event.getCurrentTarget().breakDown();
             }
         }, this);
     },
@@ -186,8 +190,6 @@ var GameScene = cc.Scene.extend({
                     this[key] = level[key];
                 }
             }
-        }
-        else {
         }
     },
     
@@ -310,6 +312,7 @@ var GameScene = cc.Scene.extend({
     },
     
     win: function() {
+        cc.log("Win")
     }
 });
 GameScene.instance = null;

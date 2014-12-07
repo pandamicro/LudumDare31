@@ -9,7 +9,7 @@ EnemyLayer = cc.Layer.extend({
     addEnemy: function(type) {
         var enemy = new type(this.target), 
             x, y;
-        this.addChild(enemy);
+        this.addChild(enemy, CFG.fantomeZ);
         enemy.x = enemy.width/2 + Math.round(Math.random() * this.width - enemy.width);
         enemy.y = enemy.height/2 + Math.round(Math.random() * this.height - enemy.height);
         enemy.goAfter();

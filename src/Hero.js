@@ -142,7 +142,6 @@ var Hero = cc.Sprite.extend({
         if (!this.dead && this.item) {
             var speedX = this.faceRight ? 1 : (this.faceLeft ? -1 : 0), 
                 speedY = this.faceUp ? 1 : (this.faceDown ? -1 : 0);
-            cc.log("Shoot");
             this.item.fire(this.x, this.y, speedX, speedY);
             this.item.release();
             this.item = null;
@@ -161,11 +160,11 @@ var Hero = cc.Sprite.extend({
     hurt: function(damage) {
         if (this.unhurtable || this.dead) return;
         
+        this.hp -= damage;
         if (this.hp <= 0) {
             this.die();
         }
         else {
-            this.hp -= damage;
             cc.log("HP: " + this.hp);
             this.unhurtable = true;
             this.scheduleOnce(this.turnNormal, 1);

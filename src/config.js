@@ -1,5 +1,5 @@
-var marginX = 130,
-    marginY = 130,
+var marginX = 125,
+    marginY = 125,
     width = 1200,
     height = 800;
 
@@ -13,9 +13,9 @@ var CFG = {
     groundW: width - marginX * 2,
     groundH: height - marginY * 2,
     
-    leftBorder: marginX,
-    rightBorder: width - marginX,
-    downBorder: marginY,
+    leftBorder: marginX + 15,
+    rightBorder: width - marginX - 15,
+    downBorder: marginY + 20,
     upBorder: height - marginY,
     
     inScaleX: 0.78,
@@ -33,7 +33,7 @@ var CFG = {
     },
     
     Hero: {
-        scale: 0.7,
+        scale: 0.8,
         speed: 5,
         hp: 100
     },
@@ -50,7 +50,7 @@ var CFG = {
         restFr: "fantome_rest.png"
     },
     
-    itemInterval: 350,
+    itemInterval: 300,
     itemDuration: 5,
     
     bulletSpeed: 8,
@@ -69,7 +69,16 @@ var CFG = {
     home2Y: 350,
     
     objZ: 7,
-    itemsZ: 4
+    itemsZ: 4,
+    roomZ: 1,
+    heroZ: 3,
+    fantomeZ: 1,
+    
+    winType: winType,
+    
+    contraArmorBaseHP: 1,
+    contraWallHP: 25,
+    contraArmorInterval: 250
 }
 
 function easyRandom(seed, range) {

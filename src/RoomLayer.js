@@ -40,7 +40,7 @@ var RoomLayer = cc.Layer.extend({
         
         for (i = 0, l = items.length; i < l; ++i) {
             item = items[i];
-            if (!item.isItem) continue;
+            if (!item.isItem || !item.visible) continue;
             x = tarPos.x - (item._position.x + CFG.marginX);
             y = tarPos.y - (item._position.y + CFG.marginY);
             distance = Math.round(Math.sqrt(x * x + y * y));

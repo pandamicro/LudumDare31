@@ -122,7 +122,6 @@ var Enemy = cc.Sprite.extend({
     
     getCouraged: function () {
         this.couraged = true;
-        cc.log("Couraged");
     },
     
     hurt: function() {
@@ -131,5 +130,6 @@ var Enemy = cc.Sprite.extend({
             this.dieAnime,
             cc.callFunc(this.removeFromParent, this)
         ));
+        return true;
     }
 });
