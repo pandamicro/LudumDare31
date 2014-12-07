@@ -30,7 +30,8 @@ var Enemy = cc.Sprite.extend({
     
     update: function(dt) {
         var x = this.x, 
-            y = this.y;
+            y = this.y,
+            dx, dy;
         
         if (this._count >= 15) {
             this.strategy();
@@ -38,10 +39,16 @@ var Enemy = cc.Sprite.extend({
         }
         this._count ++;
         
-        x += this.speed * Math.cos(this.direction);
-        y += this.speed * Math.sin(this.direction);
+        dx = this.speed * Math.cos(this.direction);
+        dy = this.speed * Math.sin(this.direction);
+        x += dx;
+        y += dy;
         if (x < CFG.width && x > -1) {
             this.x = x;
+            if (dx > 0 && !this._flippedX)
+                this.flippedX = true;
+            else if (dx < 0 && this._flippedX)
+                this.flippedX = false;
         }
         if (y < CFG.height && y > -1) {
             this.y = y;
