@@ -2,22 +2,119 @@ var Levels = [
     {
         itemTypes: [], 
         itemProbs: [],
-        enemyCount: 0
+        enemyCount: 0,
+        objs: [
+            {
+                tex : "#pac_enemy.png",
+                type : Crystal,
+                pos : [200, 450]
+            }
+        ]
     },
+    // Mario
     {
         itemTypes: [Flower, Timer], 
         itemProbs: [0.8, 0.9],
-        enemyCount: 3
+        enemyCount: 3,
+        objs: [
+            {
+                tex : "#magic_wall.png",
+                type : MagicWall,
+                pos : [600, 250]
+            },
+            {
+                tex : "#magic_wall.png",
+                type : MagicWall,
+                pos : [200, 450]
+            }
+        ]
     },
+    // Tank
     {
         itemTypes: [Armor, Shell, Timer],
         itemProbs: [0.7, 0.8, 0.9],
-        enemyCount: 5
+        enemyCount: 5,
+        objs: [
+            {
+                tex : "#home.png",
+                type : TankHome,
+                pos : [130, 50]
+            },
+            {
+                tex : "#home.png",
+                type : TankHome,
+                pos : [800, 200]
+            }
+        ]
     },
+    // Pacman
     {
         itemTypes: [Pacman, Shell, Timer],
         itemProbs: [0.65, 0.75, 0.9],
-        enemyCount: 5
+        enemyCount: 5,
+        objs: [
+            {
+                tex : "#pac_enemy.png",
+                type : PacmanEnemy,
+                pos : [50, 50]
+            },
+            {
+                tex : "#pac_enemy.png",
+                type : PacmanEnemy,
+                pos : [50, 418]
+            },
+            {
+                tex : "#pac_enemy.png",
+                type : PacmanEnemy,
+                pos : [818, 50]
+            },
+            {
+                tex : "#pac_enemy.png",
+                type : PacmanEnemy,
+                pos : [818, 418]
+            }
+        ]
+    },
+    // Zelda
+    {
+        itemTypes: [MasterBlade, Shell, Timer],
+        itemProbs: [0.7, 0.8, 0.9],
+        enemyCount: 5,
+        objs: [
+            {
+                tex : "#static_wall.png",
+                type : HeartBase,
+                pos : [220, 320]
+            },
+            {
+                tex : "#static_wall.png",
+                type : HeartBase,
+                pos : [450, 550]
+            },
+            {
+                tex : "#static_wall.png",
+                type : HeartBase,
+                pos : [220, 320]
+            }
+        ]
+    },
+    // Contra
+    {
+        itemTypes: [Armor, Shell, Timer],
+        itemProbs: [0.7, 0.8, 0.9],
+        enemyCount: 5,
+        objs: [
+            {
+                tex : "#contra_wall.png",
+                type : ContraWall,
+                pos : [900, 400]
+            },
+            {
+                tex : "#armor_block.png",
+                type : ContraArmor,
+                pos : [200, 400]
+            }
+        ]
     }
 ];
 
@@ -31,11 +128,13 @@ var GameScene = cc.Scene.extend({
     
     _breaking: false,
     enemies: [],
+    crystals: [],
     _level: -1,
     
     itemTypes: [],
     itemProbs: [],
     enemyCount: 0,
+    objs: [],
     
     ctor: function() {
         this._super();
@@ -60,12 +159,14 @@ var GameScene = cc.Scene.extend({
         this.addChild(this._enemyLayer, 4);
         this.addEnemies(this.enemyCount);
         
+        this.initObjs();
+        
         this.scheduleUpdate();
         
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ALL_AT_ONCE,
             onTouchesEnded: function(touches, event) {
-                event.getCurrentTarget().breakDown();
+//                event.getCurrentTarget().breakDown();
             }
         }, this);
     },
@@ -85,6 +186,49 @@ var GameScene = cc.Scene.extend({
         }
     },
     
+    initObjs: function() {
+        var objs = this.objs, i, l, obj, node;
+        for (i = 0, l = objs.length; i < l; ++i) {
+            obj = objs[i];
+            node = obj.node = new obj.type(obj.tex);
+            node.x = obj.pos[0];
+            node.y = obj.pos[1];
+                        
+            if (node instanceof Crystal)
+                this.addCrystal(node);
+            else this.addObject(node);
+        }
+    },
+    
+    addCrystal: function (crystal, zIndex) {
+        this._room._itemLayer.addChild(crystal, zIndex || CFG.objZ);
+        this.crystals.push(crystal);
+    },
+    removeCrystal: function (crystal) {
+        var id = this.crystals.indexOf(crystal);
+        this.crystals = this.crystals.splice(id, 1);
+        this._room._itemLayer.removeChild(crystal, true);
+    },
+    getCrystal: function (crystal) {
+        var self = this;
+        
+        // Last one
+        if (this.crystals.length == 1) {
+            this.scheduleOnce(this.breakDown, 0);
+        }
+        else {
+            this.scheduleOnce(function() {
+                self.removeCrystal(crystal);
+            }, 0);
+        }
+    },
+    addObject: function (obj, zIndex) {
+        this._room.addChild(obj, zIndex || CFG.objZ);
+    },
+    removeObject: function (obj) {
+        this._room.removeChild(obj, true);
+    },
+    
     addEnemies: function (count) {
         for (var i = 0; i < count; i++)
              this._enemyLayer.addEnemy(Enemy);
@@ -101,20 +245,32 @@ var GameScene = cc.Scene.extend({
         }
     },
     
+    cleanUp: function() {
+        var i, l;
+        for (i = 0, l = this.crystals.length; i < l; ++i) {
+            this._room.removeChild(this.crystals[i], true);
+        }
+        this.crystals = [];
+        this.objs = [];
+    },
+    
     breakDown: function() {
         this._breaking = true;
         
+        this.cleanUp();
         this.levelUp();
         
         this._downRoom && this._downRoom.removeFromParent(true);
-        this._downRoom = new RoomLayer(this._hero, this.itemTypes, this.itemProbs);
-        this._downRoom.scaleX = CFG.inScaleX;
-        this._downRoom.scaleY = CFG.inScaleY;
-        this.addChild(this._downRoom, 0);
+        this._downRoom = this._room;
+        this._room = new RoomLayer(this._hero, this.itemTypes, this.itemProbs);
+        this._room.scaleX = CFG.inScaleX;
+        this._room.scaleY = CFG.inScaleY;
+        this.addChild(this._room, 0);
         
-        this._room._tiledLayer.breakDown();
+        this.initObjs();
         
-        this._room.runAction(
+        this._downRoom._tiledLayer.breakDown();
+        this._downRoom.runAction(
             cc.sequence(
                 cc.delayTime(CFG.tileBreakTime),
                 cc.callFunc(this.preScale, this),
@@ -128,16 +284,13 @@ var GameScene = cc.Scene.extend({
     
     preScale: function() {
         // Clean up the room
-        this._room.cleanUp();
-        this._downRoom.runAction(cc.scaleTo(1, 1));
+        this._downRoom.cleanUp();
+        this._room.runAction(cc.scaleTo(1, 1));
         this._hero.falling();
     },
     
     transitionDone: function() {
-        var temp = this._room;
-        this._room = this._downRoom;
         this._room.zIndex = 1;
-        this._downRoom = temp;
         this._downRoom.zIndex = 2;
         
         this.addEnemies(this.enemyCount);

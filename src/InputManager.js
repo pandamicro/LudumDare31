@@ -5,7 +5,7 @@ var HeroKeyboardManager = cc.EventListener.create({
         var hero = event.getCurrentTarget();
         if (hero.isFalling) return;
 
-        if (keyCode == 39 && !hero.faceRight) {
+        if (keyCode == 39 && (!hero.walking || !hero.faceRight)) {
             hero.faceUp = false;
             hero.faceDown = false;
             hero.faceLeft = false;
@@ -14,7 +14,7 @@ var HeroKeyboardManager = cc.EventListener.create({
             hero.stopAllActions();
             hero.runAction(hero.rightAnime);
         }
-        else if (keyCode == 37 && !hero.faceLeft) {
+        else if (keyCode == 37 && (!hero.walking || !hero.faceLeft)) {
             hero.faceUp = false;
             hero.faceDown = false;
             hero.faceLeft = true;
@@ -23,7 +23,7 @@ var HeroKeyboardManager = cc.EventListener.create({
             hero.stopAllActions();
             hero.runAction(hero.leftAnime);
         }
-        else if (keyCode == 38 && !hero.faceUp) {
+        else if (keyCode == 38 && (!hero.walking || !hero.faceUp)) {
             hero.faceUp = true;
             hero.faceDown = false;
             hero.faceLeft = false;
@@ -32,7 +32,7 @@ var HeroKeyboardManager = cc.EventListener.create({
             hero.stopAllActions();
             hero.runAction(hero.upAnime);
         }
-        else if (keyCode == 40 && !hero.faceDown) {
+        else if (keyCode == 40 && (!hero.walking || !hero.faceDown)) {
             hero.faceUp = false;
             hero.faceDown = true;
             hero.faceLeft = false;

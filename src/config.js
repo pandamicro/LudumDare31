@@ -57,13 +57,22 @@ var CFG = {
     itemDuration: 5,
     
     bulletSpeed: 8,
-    bulletZ: 6,
+    bulletZ: 8,
     
     flowerDamage: 1,
     bulletDamage: 1,
     pacmanDamage: 1,
+    bladeDamage: 1,
     
-    frameTag: 123
+    frameTag: 123,
+    
+    home1X: 280,
+    home1Y: 200,
+    home2X: 950,
+    home2Y: 350,
+    
+    objZ: 7,
+    itemsZ: 4
 }
 
 function easyRandom(seed, range) {

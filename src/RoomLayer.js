@@ -24,16 +24,13 @@ var RoomLayer = cc.Layer.extend({
         this._itemLayer.y = CFG.marginY;
         this._itemLayer.width = CFG.groundW;
         this._itemLayer.height = CFG.groundH;
-        this.addChild(this._itemLayer, 4);
-    },
-    
-    onEnter: function() {
-        this._super();
+        this.addChild(this._itemLayer, CFG.itemsZ);
     },
     
     update: function(dt) {
         var distance = 0, tarPos = this.hero.getPosition(), x, y,
-            items = this._itemLayer.children, i, l, item;
+            items = this._itemLayer.children, i, l, item,
+            children = this.children, child;
         
         if (this.nextItemCount == 0) {
             this._itemLayer.addItem();
@@ -43,6 +40,7 @@ var RoomLayer = cc.Layer.extend({
         
         for (i = 0, l = items.length; i < l; ++i) {
             item = items[i];
+            if (!item.isItem) continue;
             x = tarPos.x - (item._position.x + CFG.marginX);
             y = tarPos.y - (item._position.y + CFG.marginY);
             distance = Math.round(Math.sqrt(x * x + y * y));
@@ -52,6 +50,11 @@ var RoomLayer = cc.Layer.extend({
                 this.hero.getItem(item);
                 break;
             }
+        }
+        
+        for (i = 0, l = children.length; i < l; ++i) {
+            child = children[i];
+            child.update && child.update(dt);
         }
     },
     

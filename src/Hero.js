@@ -76,8 +76,8 @@ var Hero = cc.Sprite.extend({
         this.stand();
         this.collisionObjs = [];
         this.scale = CFG.Hero.scale;
-        this.w = this.width;
-        this.h = this.height;
+        this.w = this.width * CFG.Hero.scale * 0.5;
+        this.h = this.height * CFG.Hero.scale;
     },
     
     onEnter: function() {
@@ -88,6 +88,11 @@ var Hero = cc.Sprite.extend({
     
     addCollisionObj: function(obj) {
         this.collisionObjs.push(obj);
+    },
+    removeCollisionObj: function(obj) {
+        var id = this.collisionObjs.indexOf(obj);
+        if (id != -1)
+            this.collisionObjs = this.collisionObjs.splice(id, 1);
     },
     
     stand: function() {
@@ -197,7 +202,8 @@ var Hero = cc.Sprite.extend({
         for (i = 0, l = this.collisionObjs.length; i < l; i++) {
             obj = this.collisionObjs[i];
             r2 = obj.getCollisionRect();
-            if (cc.rectContainsRect(r1, r2)) {
+            if (cc.rectIntersectsRect(r1, r2)) {
+                obj.collision = true;
                 return;
             }
         }

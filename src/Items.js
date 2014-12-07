@@ -50,6 +50,7 @@ var Bullet = cc.Sprite.extend({
 });
 
 var Item = cc.Sprite.extend({
+    isItem: true,
     isWeapon: false,
     
     onEnter: function() {
@@ -161,3 +162,142 @@ var Pacman = Item.extend({
         GameScene.instance.addChild(bullet, CFG.bulletZ);
     }
 });
+var MasterBlade = Item.extend({
+    ctor: function() {
+        this._super("#master_blade.png");
+        this.isWeapon = true;
+        this.setFrame("#frame.png");
+    },
+    
+    fire: function(x, y, speedX, speedY) {
+        var bullet = new Bullet("#blade_wave.png");
+        bullet.x = x;
+        bullet.y = y;
+        bullet.speedX = CFG.bulletSpeed * speedX;
+        bullet.speedY = CFG.bulletSpeed * speedY;
+        bullet.damage = CFG.bladeDamage;
+        GameScene.instance.addChild(bullet, CFG.bulletZ);
+    }
+});
+
+var Crystal = cc.Sprite.extend({
+    isItem: true,
+    fire: function(x, y, speedX, speedY) {
+        GameScene.instance.getCrystal(this);
+    }
+});
+
+var Block = cc.Sprite.extend({
+    collision: false,
+    onEnter: function() {
+        this._super();
+        var hero = GameScene.instance._hero;
+        hero.addCollisionObj(this);
+    },
+    onExit: function() {
+        this._super();
+        hero.removeCollisionObj(this);
+    },
+    getCollisionRect: function() {
+        var w = this._contentSize.width,
+            h = this._contentSize.height;
+        return cc.rect(this._position.x + this.parent._position.x - w/2, 
+                       this._position.y + this.parent._position.y - h/2,
+                       w, h);
+    }
+});
+
+var MagicWall = Block.extend({
+    update: function () {
+        var hero, disX, disY, mashroom, x, y;
+        if (this.collision) {
+            hero = GameScene.instance._hero;
+            disY = this.y - hero.y;
+            disX = this.x - hero.x;
+            // Valid collision
+            if (disY > 0 && disY <= (this.width + hero.width + 4) / 2 && Math.abs(disX) < 20) {
+                mashroom = new Crystal("#mashroom.png");
+                x = mashroom.x = this.x - CFG.marginX;
+                y = mashroom.y = this.y - CFG.marginY + 20;
+                GameScene.instance.addCrystal(mashroom, CFG.objZ-1);
+                mashroom.runAction(cc.moveTo(0.5, x, y + (mashroom.height + this.height) / 2 - 20));
+                
+                // Cancel update
+                this.update = null;
+            }
+            this.collision = false;
+        }
+    }
+});
+
+var TankHome = Block.extend({
+    walls: null,
+    onEnter: function() {
+        var wall, x = this.x, y = this.y;
+        this._super();
+        // Left
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x - 77;
+        wall.y = y;
+        GameScene.instance.addObject(wall);
+        // LeftTop
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x - 77;
+        wall.y = y + 62;
+        GameScene.instance.addObject(wall);
+        // LeftBottom
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x - 77;
+        wall.y = y - 62;
+        GameScene.instance.addObject(wall);
+        // Right
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x + 77;
+        wall.y = y;
+        GameScene.instance.addObject(wall);
+        // RightTop
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x + 77;
+        wall.y = y + 62;
+        GameScene.instance.addObject(wall);
+        // RightBottom
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x + 77;
+        wall.y = y - 62;
+        GameScene.instance.addObject(wall);
+        // CenterTop
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x;
+        wall.y = y + 62;
+        GameScene.instance.addObject(wall);
+        // CenterBottom
+        wall = new cc.Block("#sand_wall.png");
+        wall.x = x;
+        wall.y = y - 62;
+        GameScene.instance.addObject(wall);
+        
+        this.walls = [];
+    },
+    
+    onExit: function() {
+        var i, l;
+        for (i = 0, l = this.walls.length; i < l; ++i) {
+            GameScene.instance.removeObject(this.walls[i]);
+        }
+        this.walls = [];
+        this._super();
+    },
+    
+    wallUpdate: function() {
+    },
+    update: function() {
+    }
+});
+
+var PacmanEnemy = null;
+
+var HeartBase = null;
+
+var ContraWall = null;
+
+var ContraArmor = null;
