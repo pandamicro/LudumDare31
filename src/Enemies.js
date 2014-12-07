@@ -17,6 +17,8 @@ var Enemy = cc.Sprite.extend({
     couraged: false,
     courageScheduled: false,
     
+    disabled: false,
+    
     ctor: function(target) {
         var tex = CFG.Enemy.tex;
         this.chaseFr = new cc.SpriteFrame(tex, CFG.Enemy.chaseRect);
@@ -26,9 +28,13 @@ var Enemy = cc.Sprite.extend({
         this._super(this.restFr);
         this.target = target;
         this.speed += Math.random() * 1 - 0.5;
+        
+        this.dieAnime = cc.fadeOut(0.5);
     },
     
     update: function(dt) {
+        if (this.disabled) return;
+        
         var x = this.x, 
             y = this.y,
             dx, dy;
@@ -120,13 +126,10 @@ var Enemy = cc.Sprite.extend({
     },
     
     hurt: function() {
-        this.dieAnime && this.runAction(cc.sequence(
+        this.setSpriteFrame(this.runFr);
+        this.runAction(cc.sequence(
             this.dieAnime,
-            cc.callFunc(this.killed, this)
+            cc.callFunc(this.removeFromParent, this)
         ));
-    },
-    
-    killed: function() {
-        this.removeFromParent(true);
     }
 });

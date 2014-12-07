@@ -53,8 +53,17 @@ var CFG = {
         restRect: cc.rect(0, 0, 100, 120)
     },
     
-    itemInterval: 600,
+    itemInterval: 350,
     itemDuration: 5,
+    
+    bulletSpeed: 8,
+    bulletZ: 6,
+    
+    flowerDamage: 1,
+    bulletDamage: 1,
+    pacmanDamage: 1,
+    
+    frameTag: 123
 }
 
 function easyRandom(seed, range) {

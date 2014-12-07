@@ -19,10 +19,11 @@ var Hero = cc.Sprite.extend({
     unhurtable: false,
     isFalling: false,
     
-    goLeft: false,
-    goRight: false,
-    goUp: false,
-    goDown: false,
+    faceLeft: false,
+    faceRight: false,
+    faceUp: false,
+    faceDown: false,
+    walking: false,
     
     w: 0,
     h: 0,
@@ -91,27 +92,23 @@ var Hero = cc.Sprite.extend({
     
     stand: function() {
         this.stopAllActions();
-        if (this.goUp) {
-            this.goUp = false;
+        this.walking = false;
+        if (this.faceUp) {
             this.setSpriteFrame(this.standUp);
         }
-        else if (this.goDown) {
-            this.goDown = false;
+        else if (this.faceDown) {
             this.setSpriteFrame(this.standDown);
         }
-        else if (this.goLeft) {
-            this.goLeft = false;
+        else if (this.faceLeft) {
             this.setSpriteFrame(this.standLeft);
         }
-        else if (this.goRight) {
-            this.goRight = false;
+        else if (this.faceRight) {
             this.setSpriteFrame(this.standRight);
         }
-        else 
-            this.setSpriteFrame(this.standDown);
     },
     
     fall: function() {
+        this.walking = false;
         this.isFalling = true;
         this.stopAllActions();
         this.setSpriteFrame(this.preFallFr);
@@ -127,15 +124,12 @@ var Hero = cc.Sprite.extend({
         this.isFalling = true;
         this.stopAllActions();
         this.setSpriteFrame(this.landedFr);
-        this.scheduleOnce(this.fallOver, 1);
+        this.scheduleOnce(this.fallOver, 0.3);
     },
     
     fallOver: function() {
         this.isFalling = false;
-        this.goUp = false;
-        this.goDown = true;
-        this.goLeft = false;
-        this.goRight = false;
+        this.faceDown = true;
         this.stand();
     },
     
@@ -145,8 +139,10 @@ var Hero = cc.Sprite.extend({
     
     shoot: function() {
         if (this.item) {
+            var speedX = this.faceRight ? 1 : (this.faceLeft ? -1 : 0), 
+                speedY = this.faceUp ? 1 : (this.faceDown ? -1 : 0);
             cc.log("Shoot");
-            this.item.fire();
+            this.item.fire(this.x, this.y, speedX, speedY);
             this.item.release();
             this.item = null;
         }
@@ -171,23 +167,30 @@ var Hero = cc.Sprite.extend({
     
     getItem: function(item) {
         item.removeFromParent(true);
-        item.retain();
-        this.item = item;
+        if (item.isWeapon) {
+            item.retain();
+            this.item = item;
+        }
+        else {
+            item.fire();
+        }
     },
     
     update: function() {
         var x = this.x, y = this.y, i, l, obj, r1, r2;
-        if (this.goRight && x <= CFG.rightBorder) {
-            x += this.speed;
-        }
-        else if (this.goLeft && x >= CFG.leftBorder) {
-            x -= this.speed;
-        }
-        else if (this.goUp && y <= CFG.upBorder) {
-            y += this.speed;
-        }
-        else if (this.goDown && y >= CFG.downBorder) {
-            y -= this.speed;
+        if (this.walking) {
+            if (this.faceRight && x <= CFG.rightBorder) {
+                x += this.speed;
+            }
+            else if (this.faceLeft && x >= CFG.leftBorder) {
+                x -= this.speed;
+            }
+            else if (this.faceUp && y <= CFG.upBorder) {
+                y += this.speed;
+            }
+            else if (this.faceDown && y >= CFG.downBorder) {
+                y -= this.speed;
+            }
         }
         
         r1 = cc.rect(x - this.w/2, y - this.h/2, this.w, this.h);

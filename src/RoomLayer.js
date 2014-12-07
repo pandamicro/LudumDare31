@@ -7,7 +7,7 @@ var RoomLayer = cc.Layer.extend({
     hero: null,
     nextItemCount: CFG.itemInterval,
     
-    ctor: function(hero) {
+    ctor: function(hero, itemTypes, probs) {
         this._super();
         this.hero = hero;
         
@@ -19,7 +19,7 @@ var RoomLayer = cc.Layer.extend({
         this._wallLayer = new WallLayer(cc.winSize.width, cc.winSize.height);
         this.addChild(this._wallLayer);
         
-        this._itemLayer = new ItemLayer(hero);
+        this._itemLayer = new ItemLayer(itemTypes, probs);
         this._itemLayer.x = CFG.marginX;
         this._itemLayer.y = CFG.marginY;
         this._itemLayer.width = CFG.groundW;
@@ -29,8 +29,6 @@ var RoomLayer = cc.Layer.extend({
     
     onEnter: function() {
         this._super();
-        for (var i = 0; i < 2; i++)
-             this._itemLayer.addItem(Item);
     },
     
     update: function(dt) {
@@ -38,8 +36,7 @@ var RoomLayer = cc.Layer.extend({
             items = this._itemLayer.children, i, l, item;
         
         if (this.nextItemCount == 0) {
-            this._itemLayer.addItem(Item);
-            cc.log("generated");
+            this._itemLayer.addItem();
             this.nextItemCount = easyRandom(CFG.itemInterval, CFG.itemInterval);
         }
         this.nextItemCount--;
