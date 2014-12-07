@@ -254,6 +254,13 @@ var Crystal = cc.Sprite.extend({
     }
 });
 
+var Princess = Crystal.extend({
+    fire: function(x, y, speedX, speedY) {
+        GameScene.instance._hero.stand();
+        GameScene.instance.win();
+    }
+});
+
 var Block = cc.Sprite.extend({
     collision: false,
     onEnter: function() {
@@ -498,8 +505,7 @@ var ContraWall = Block.extend({
             if (this.hp <= 0) {
                 this.runAction(cc.sequence(
                     cc.fadeOut(1),
-                    cc.callFunc(this.removeFromParent, this),
-                    cc.callFunc(GameScene.instance.win, GameScene.instance)
+                    cc.callFunc(this.removeFromParent, this)
                 ))
             }
         }

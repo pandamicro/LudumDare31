@@ -50,7 +50,7 @@ var CFG = {
         restFr: "fantome_rest.png"
     },
     
-    itemInterval: 300,
+    itemInterval: 260,
     itemDuration: 5,
     
     bulletSpeed: 8,

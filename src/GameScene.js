@@ -11,29 +11,6 @@ var Levels = [
             }
         ]
     },
-    // Contra
-    {
-        itemTypes: [Armor, Shell, Timer],
-        itemProbs: [0.7, 0.8, 0.9],
-        enemyCount: 6,
-        objs: [
-            {
-                tex : "#contra_wall.png",
-                type : ContraWall,
-                pos : [900, 400]
-            },
-            {
-                tex : "#armor_block.png",
-                type : ContraArmorBase,
-                pos : [200, 400]
-            },
-            {
-                tex : CFG.winType ? "#princess.png" : "#mashroom2.png",
-                type : Block,
-                pos : [850, 400]
-            }
-        ]
-    },
     // Mario
     {
         itemTypes: [Flower, Timer], 
@@ -120,6 +97,29 @@ var Levels = [
                 pos : [980, 320]
             }
         ]
+    },
+    // Contra
+    {
+        itemTypes: [Armor, Shell, Timer],
+        itemProbs: [0.7, 0.8, 0.9],
+        enemyCount: 6,
+        objs: [
+            {
+                tex : "#contra_wall.png",
+                type : ContraWall,
+                pos : [900, 400]
+            },
+            {
+                tex : "#armor_block.png",
+                type : ContraArmorBase,
+                pos : [200, 400]
+            },
+            {
+                tex : CFG.winType ? "#princess.png" : "#mashroom2.png",
+                type : Princess,
+                pos : [850, 400]
+            }
+        ]
     }
 ];
 
@@ -129,7 +129,7 @@ var GameScene = cc.Scene.extend({
     _hero: null,
     _enemyLayer: null,
     //_magicBalls: null,
-    _uiLayer: null,
+    uiLayer: null,
     
     _breaking: false,
     enemies: [],
@@ -140,6 +140,8 @@ var GameScene = cc.Scene.extend({
     itemProbs: [],
     enemyCount: 0,
     objs: [],
+    
+    stopped: false,
     
     ctor: function() {
         this._super();
@@ -164,20 +166,12 @@ var GameScene = cc.Scene.extend({
         this.addChild(this._enemyLayer, 10);
         this.addEnemies(this.enemyCount);
         
-        this._uiLayer = new UILayer();
-        this.addChild(this._uiLayer, 20);
+        this.uiLayer = new UILayer();
+        this.addChild(this.uiLayer, 20);
 
-        
         this.initObjs();
         
         this.scheduleUpdate();
-        
-        cc.eventManager.addListener({
-            event: cc.EventListener.TOUCH_ALL_AT_ONCE,
-            onTouchesEnded: function(touches, event) {
-//                event.getCurrentTarget().breakDown();
-            }
-        }, this);
     },
     
     levelUp: function() {
@@ -244,10 +238,10 @@ var GameScene = cc.Scene.extend({
     
     update: function(dt) {
         if (!this._breaking) {
-            var children = this.children, i, l, child, downRoom = this._downRoom;
-            for (i = 0, l = children.length; i < l; ++i) {
+            var children = this.children, i, child, downRoom = this._downRoom;
+            for (i = children.length-1; i >= 0; --i) {
                 child = children[i];
-                child != downRoom && child.update && child.update(dt);
+                child && child != downRoom && child.update && child.update(dt);
             }
         }
     },
@@ -273,9 +267,9 @@ var GameScene = cc.Scene.extend({
         this._room.scaleX = CFG.inScaleX;
         this._room.scaleY = CFG.inScaleY;
         this.addChild(this._room, 0);
-        
+
         this.initObjs();
-        
+
         this._downRoom._tiledLayer.breakDown();
         this._downRoom.runAction(
             cc.sequence(
@@ -285,7 +279,7 @@ var GameScene = cc.Scene.extend({
                 cc.callFunc(this.transitionDone, this)
             )
         );
-        
+
         this._hero.fall();
     },
     
@@ -308,11 +302,21 @@ var GameScene = cc.Scene.extend({
     },
     
     gameOver: function() {
-        cc.log("Game Over")
+        if (!this.stopped) {
+            this.stopped = true;
+            cc.eventManager.removeAllListeners();
+            this.removeChild(this._enemyLayer);
+            this.uiLayer.lost();
+        }
     },
     
     win: function() {
-        cc.log("Win")
+        if (!this.stopped) {
+            this.stopped = true;
+            cc.eventManager.removeAllListeners();
+            this.removeChild(this._enemyLayer);
+            this.uiLayer.win();
+        }
     }
 });
 GameScene.instance = null;

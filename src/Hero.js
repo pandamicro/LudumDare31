@@ -145,6 +145,7 @@ var Hero = cc.Sprite.extend({
             this.item.fire(this.x, this.y, speedX, speedY);
             this.item.release();
             this.item = null;
+            GameScene.instance.uiLayer.setItem(null);
         }
     },
     
@@ -161,6 +162,7 @@ var Hero = cc.Sprite.extend({
         if (this.unhurtable || this.dead) return;
         
         this.hp -= damage;
+        GameScene.instance.uiLayer.setHp(this.hp);
         if (this.hp <= 0) {
             this.die();
         }
@@ -177,14 +179,17 @@ var Hero = cc.Sprite.extend({
     
     getItem: function(item) {
         if (!item.canGet || item.canGet()) {
-            item.removeFromParent(true);
             if (item.isWeapon) {
+                GameScene.instance.uiLayer.setItem(item.getTexture(), item.getTextureRect(), item.isTextureRectRotated());
                 item.retain();
                 this.item = item;
             }
             else {
                 item.fire();
+                if (item instanceof Princess)
+                    return;
             }
+            item.removeFromParent(true);
         }
     },
     
