@@ -92,7 +92,7 @@ var Hero = cc.Sprite.extend({
     removeCollisionObj: function(obj) {
         var id = this.collisionObjs.indexOf(obj);
         if (id != -1)
-            this.collisionObjs = this.collisionObjs.splice(id, 1);
+            this.collisionObjs.splice(id, 1);
     },
     
     stand: function() {

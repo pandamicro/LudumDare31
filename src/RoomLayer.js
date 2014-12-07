@@ -59,7 +59,10 @@ var RoomLayer = cc.Layer.extend({
     },
     
     cleanUp: function() {
-        this._tiledLayer.removeFromParent(true);
-        this._itemLayer.removeFromParent(true);
+        var i, l, children = this.children;
+        for (i = children.length-1; i >= 0; --i) {
+            child = children[i];
+            child == this._wallLayer || child.removeFromParent(true);
+        }
     }
 });

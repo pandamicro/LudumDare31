@@ -32,7 +32,7 @@ var Levels = [
     // Tank
     {
         itemTypes: [Armor, Shell, Timer],
-        itemProbs: [0.7, 0.8, 0.9],
+        itemProbs: [0.8, 0.9, 1],
         enemyCount: 5,
         objs: [
             {
@@ -206,7 +206,7 @@ var GameScene = cc.Scene.extend({
     },
     removeCrystal: function (crystal) {
         var id = this.crystals.indexOf(crystal);
-        this.crystals = this.crystals.splice(id, 1);
+        this.crystals.splice(id, 1);
         this._room._itemLayer.removeChild(crystal, true);
     },
     getCrystal: function (crystal) {

@@ -191,12 +191,11 @@ var Block = cc.Sprite.extend({
     collision: false,
     onEnter: function() {
         this._super();
-        var hero = GameScene.instance._hero;
-        hero.addCollisionObj(this);
+        GameScene.instance._hero.addCollisionObj(this);
     },
     onExit: function() {
         this._super();
-        hero.removeCollisionObj(this);
+        GameScene.instance._hero.removeCollisionObj(this);
     },
     getCollisionRect: function() {
         var w = this._contentSize.width,
@@ -208,6 +207,15 @@ var Block = cc.Sprite.extend({
 });
 
 var MagicWall = Block.extend({
+    mashroom: null,
+    onEnter: function() {
+        this._super();
+        this.mashroom = new Crystal("#mashroom.png");
+        this.mashroom.x = this.x - CFG.marginX;
+        this.mashroom.y = this.y - CFG.marginY + 5;
+        GameScene.instance.addCrystal(this.mashroom, CFG.objZ-1);
+        this.mashroom.visible = false;
+    },
     update: function () {
         var hero, disX, disY, mashroom, x, y;
         if (this.collision) {
@@ -216,11 +224,8 @@ var MagicWall = Block.extend({
             disX = this.x - hero.x;
             // Valid collision
             if (disY > 0 && disY <= (this.width + hero.width + 4) / 2 && Math.abs(disX) < 20) {
-                mashroom = new Crystal("#mashroom.png");
-                x = mashroom.x = this.x - CFG.marginX;
-                y = mashroom.y = this.y - CFG.marginY + 20;
-                GameScene.instance.addCrystal(mashroom, CFG.objZ-1);
-                mashroom.runAction(cc.moveTo(0.5, x, y + (mashroom.height + this.height) / 2 - 20));
+                this.mashroom.visible = true;
+                this.mashroom.runAction(cc.moveTo(0.5, this.mashroom.x, this.mashroom.y + (this.mashroom.height + this.height) / 2 - 5));
                 
                 // Cancel update
                 this.update = null;
@@ -230,53 +235,69 @@ var MagicWall = Block.extend({
     }
 });
 
-var TankHome = Block.extend({
+var TankHome = Crystal.extend({
     walls: null,
     onEnter: function() {
-        var wall, x = this.x, y = this.y;
+        var wall, x = this.x + CFG.marginX, y = this.y + CFG.marginY;
         this._super();
-        // Left
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x - 77;
-        wall.y = y;
-        GameScene.instance.addObject(wall);
-        // LeftTop
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x - 77;
-        wall.y = y + 62;
-        GameScene.instance.addObject(wall);
-        // LeftBottom
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x - 77;
-        wall.y = y - 62;
-        GameScene.instance.addObject(wall);
-        // Right
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x + 77;
-        wall.y = y;
-        GameScene.instance.addObject(wall);
-        // RightTop
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x + 77;
-        wall.y = y + 62;
-        GameScene.instance.addObject(wall);
-        // RightBottom
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x + 77;
-        wall.y = y - 62;
-        GameScene.instance.addObject(wall);
-        // CenterTop
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x;
-        wall.y = y + 62;
-        GameScene.instance.addObject(wall);
-        // CenterBottom
-        wall = new cc.Block("#sand_wall.png");
-        wall.x = x;
-        wall.y = y - 62;
-        GameScene.instance.addObject(wall);
         
         this.walls = [];
+        // Left
+        wall = new Block("#sand_wall.png");
+        wall.x = x - 77;
+        wall.y = y;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // LeftTop
+        wall = new Block("#sand_wall.png");
+        wall.x = x - 77;
+        wall.y = y + 62;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // LeftBottom
+        wall = new Block("#sand_wall.png");
+        wall.x = x - 77;
+        wall.y = y - 62;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // Right
+        wall = new Block("#sand_wall.png");
+        wall.x = x + 77;
+        wall.y = y;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // RightTop
+        wall = new Block("#sand_wall.png");
+        wall.x = x + 77;
+        wall.y = y + 62;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // RightBottom
+        wall = new Block("#sand_wall.png");
+        wall.x = x + 77;
+        wall.y = y - 62;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // CenterTop
+        wall = new Block("#sand_wall.png");
+        wall.x = x;
+        wall.y = y + 62;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
+        // CenterBottom
+        wall = new Block("#sand_wall.png");
+        wall.x = x;
+        wall.y = y - 62;
+        GameScene.instance._enemyLayer.addChild(wall);
+        wall.hurt = this.wallHurt;
+        this.walls.push(wall);
     },
     
     onExit: function() {
@@ -287,10 +308,9 @@ var TankHome = Block.extend({
         this.walls = [];
         this._super();
     },
-    
-    wallUpdate: function() {
-    },
-    update: function() {
+    // Function of wall
+    wallHurt: function(damage) {
+        this.removeFromParent(true);
     }
 });
 

@@ -21,13 +21,5 @@ EnemyLayer = cc.Layer.extend({
         for (i = 0, l = enemies.length; i < l; ++i) {
             enemies[i].update(dt);
         }
-    },
-    
-    targetGotWeapon: function() {
-        var enemies = this.children, i, l;
-        
-        for (i = 0, l = enemies.length; i < l; ++i) {
-            enemies[i].runAway();
-        }
     }
 });
