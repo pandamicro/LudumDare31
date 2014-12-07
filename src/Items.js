@@ -140,7 +140,7 @@ var Flower = Item.extend({
 });
 var Pacman = Item.extend({
     ctor: function() {
-        this._super("#packman.png");
+        this._super("#pacman.png");
         this.isWeapon = true;
         this.setFrame("#frame.png");
     },
@@ -160,6 +160,16 @@ var Pacman = Item.extend({
         bullet.damage = CFG.pacmanDamage;
         bullet.setAnimation(["pacman1.png", "pacman2.png"], 0.3);
         GameScene.instance.addChild(bullet, CFG.bulletZ);
+    }
+});
+var Bean = Item.extend({
+    ctor: function() {
+        this._super("#bean.png");
+        this.setFrame("#frame.png");
+    },
+    
+    fire: function(x, y, speedX, speedY) {
+        GameScene.instance._hero.hasBean = true;
     }
 });
 var MasterBlade = Item.extend({
@@ -227,6 +237,7 @@ var MagicWall = Block.extend({
                 this.mashroom.visible = true;
                 this.mashroom.runAction(cc.moveTo(0.5, this.mashroom.x, this.mashroom.y + (this.mashroom.height + this.height) / 2 - 5));
                 
+                this.setSpriteFrame("static_wall.png");
                 // Cancel update
                 this.update = null;
             }
@@ -303,7 +314,7 @@ var TankHome = Crystal.extend({
     onExit: function() {
         var i, l;
         for (i = 0, l = this.walls.length; i < l; ++i) {
-            GameScene.instance.removeObject(this.walls[i]);
+            GameScene.instance._enemyLayer.removeChild(this.walls[i]);
         }
         this.walls = [];
         this._super();
@@ -314,9 +325,23 @@ var TankHome = Crystal.extend({
     }
 });
 
-var PacmanEnemy = null;
+var PacmanEnemy = Crystal.extend({    
+    canGet: function() {
+        var hero = GameScene.instance._hero;
+        if (hero.hasBean) {
+            hero.hasBean = false;
+            return true;
+        }
+        else {
+            hero.hurt(CFG.Enemy.damage);
+            return false;
+        }
+    }
+});
 
-var HeartBase = null;
+var HeartBase = Block.extend({
+    
+});
 
 var ContraWall = null;
 

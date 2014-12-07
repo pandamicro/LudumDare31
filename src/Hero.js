@@ -26,6 +26,8 @@ var Hero = cc.Sprite.extend({
     faceDown: false,
     walking: false,
     
+    hasBean: false,
+    
     w: 0,
     h: 0,
     
@@ -152,6 +154,7 @@ var Hero = cc.Sprite.extend({
             this.dead = true;
             this.stopAllActions();
             this.runAction(this.dieAnime);
+            GameScene.instance.gameOver();
         }
     },
     
@@ -174,13 +177,15 @@ var Hero = cc.Sprite.extend({
     },
     
     getItem: function(item) {
-        item.removeFromParent(true);
-        if (item.isWeapon) {
-            item.retain();
-            this.item = item;
-        }
-        else {
-            item.fire();
+        if (!item.canGet || item.canGet()) {
+            item.removeFromParent(true);
+            if (item.isWeapon) {
+                item.retain();
+                this.item = item;
+            }
+            else {
+                item.fire();
+            }
         }
     },
     

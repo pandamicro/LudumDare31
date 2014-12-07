@@ -1,10 +1,13 @@
 var res = {
     //tile_png : "res/tile.png",
+    title_jpg : "res/menuscene.jpg",
     wall_png : "res/wall.png",
     //hero_png : "res/hero.png",
     //enemy_png : "res/fantome.png",
     items_plist : "res/items.plist",
-    items_png : "res/items.png"
+    items_png : "res/items.png",
+    win_png : "res/win1.png",
+    lost_png : "res/gameover.png"
 };
 
 var g_resources = [];

@@ -5,9 +5,9 @@ var Levels = [
         enemyCount: 0,
         objs: [
             {
-                tex : "#pac_enemy.png",
+                tex : "#crystal.png",
                 type : Crystal,
-                pos : [200, 450]
+                pos : [700, 450]
             }
         ]
     },
@@ -49,29 +49,29 @@ var Levels = [
     },
     // Pacman
     {
-        itemTypes: [Pacman, Shell, Timer],
-        itemProbs: [0.65, 0.75, 0.9],
+        itemTypes: [Pacman, Shell, Timer, Bean],
+        itemProbs: [0.65, 0.75, 0.82, 1],
         enemyCount: 5,
         objs: [
             {
                 tex : "#pac_enemy.png",
                 type : PacmanEnemy,
-                pos : [50, 50]
+                pos : [100, 100]
             },
             {
-                tex : "#pac_enemy.png",
+                tex : "#pac_enemy1.png",
                 type : PacmanEnemy,
-                pos : [50, 418]
+                pos : [100, 432]
             },
             {
-                tex : "#pac_enemy.png",
+                tex : "#pac_enemy2.png",
                 type : PacmanEnemy,
-                pos : [818, 50]
+                pos : [832, 100]
             },
             {
-                tex : "#pac_enemy.png",
+                tex : "#pac_enemy3.png",
                 type : PacmanEnemy,
-                pos : [818, 418]
+                pos : [832, 432]
             }
         ]
     },
@@ -171,7 +171,7 @@ var GameScene = cc.Scene.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ALL_AT_ONCE,
             onTouchesEnded: function(touches, event) {
-//                event.getCurrentTarget().breakDown();
+                event.getCurrentTarget().breakDown();
             }
         }, this);
     },
@@ -303,6 +303,13 @@ var GameScene = cc.Scene.extend({
         this._hero.landed();
         
         this._breaking = false;
+    },
+    
+    gameOver: function() {
+        cc.log("Game Over")
+    },
+    
+    win: function() {
     }
 });
 GameScene.instance = null;
