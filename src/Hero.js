@@ -167,7 +167,6 @@ var Hero = cc.Sprite.extend({
             this.die();
         }
         else {
-            cc.log("HP: " + this.hp);
             this.unhurtable = true;
             this.scheduleOnce(this.turnNormal, 1);
         }
