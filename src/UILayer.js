@@ -58,7 +58,7 @@ var UILayer = cc.LayerColor.extend({
         this.addChild(title, 30);
         
         // create the label using the definition
-        var info = new cc.LabelTTF("Ludum Dare #31\nAuthor: Huabin LING @pandamicro\nPowered by Cocos2d-JS", this.fontShadow);
+        var info = new cc.LabelTTF("Ludum Dare #31\nAuthor: Huabin LING @pandamicro\nPowered by Cocos2d-JS\n\nDesktop only, use arrow keys to move, space to use items.", this.fontShadow);
         info.anchorX = 0.5;
         info.anchorY = 1;
         info.x = this.width/2;
