@@ -81,22 +81,22 @@ var Levels = [
             {
                 tex : "#pac_enemy.png",
                 type : PacmanEnemy,
-                pos : [100, 100]
+                pos : [100, 60]
             },
             {
                 tex : "#pac_enemy1.png",
                 type : PacmanEnemy,
-                pos : [100, 432]
+                pos : [100, 472]
             },
             {
                 tex : "#pac_enemy2.png",
                 type : PacmanEnemy,
-                pos : [832, 100]
+                pos : [832, 60]
             },
             {
                 tex : "#pac_enemy3.png",
                 type : PacmanEnemy,
-                pos : [832, 432]
+                pos : [832, 472]
             }
         ]
     },

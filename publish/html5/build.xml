@@ -5,7 +5,7 @@
              classpath="/Users/panda/StudyWork/Cocos/cocos2d-js/tools/cocos2d-console/plugins/project_compile/build_web/bin/compiler-1.7.jar"/>
 
     <target name="compile">
-        <jscomp compilationLevel="simple" 
+        <jscomp compilationLevel="advanced" 
                 warning="quiet"
                 debug="false" 
                 output="/Users/panda/StudyWork/GameJam/LudumDare31/publish/html5/game.min.js"
@@ -78,6 +78,22 @@
                 <file name="cocos2d/core/labelttf/LabelTTFPropertyDefine.js"/>
                 <file name="cocos2d/core/labelttf/CCLabelTTF.js"/>
                 <file name="cocos2d/core/CCActionManager.js"/>
+                <file name="cocos2d/kazmath/utility.js"/>
+                <file name="cocos2d/kazmath/vec2.js"/>
+                <file name="cocos2d/kazmath/vec3.js"/>
+                <file name="cocos2d/kazmath/vec4.js"/>
+                <file name="cocos2d/kazmath/ray2.js"/>
+                <file name="cocos2d/kazmath/mat3.js"/>
+                <file name="cocos2d/kazmath/mat4.js"/>
+                <file name="cocos2d/kazmath/plane.js"/>
+                <file name="cocos2d/kazmath/quaternion.js"/>
+                <file name="cocos2d/kazmath/aabb.js"/>
+                <file name="cocos2d/kazmath/gl/mat4stack.js"/>
+                <file name="cocos2d/kazmath/gl/matrix.js"/>
+                <file name="cocos2d/shaders/CCShaders.js"/>
+                <file name="cocos2d/shaders/CCShaderCache.js"/>
+                <file name="cocos2d/shaders/CCGLProgram.js"/>
+                <file name="cocos2d/shaders/CCGLStateCache.js"/>
                 <file name="cocos2d/actions/CCAction.js"/>
                 <file name="cocos2d/actions/CCActionInterval.js"/>
                 <file name="cocos2d/actions/CCActionInstant.js"/>
@@ -100,6 +116,7 @@
                 <file name="src/EnemyLayer.js"/>
                 <file name="src/Items.js"/>
                 <file name="src/ItemLayer.js"/>
+                <file name="src/UILayer.js"/>
                 <file name="src/GameScene.js"/>
                 <file name="main.js"/>
 
